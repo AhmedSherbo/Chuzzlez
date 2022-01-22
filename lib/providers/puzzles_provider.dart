@@ -6,21 +6,22 @@ class PuzzlesProvider with ChangeNotifier {
   late int levelCount;
   bool read = false;
   late FireStoreServices instance = FireStoreServices();
-  Puzzles _puzzles = Puzzles();
+  Puzzles puzzles = Puzzles();
   readMap() async {
     var puzzlesMaps = await instance.getLevels();
-    _puzzles.length = puzzlesMaps.length;
-    for (var i = 0; i < _puzzles.length; i++) {
+    puzzles.length = puzzlesMaps.length;
+    for (var i = 0; i < puzzles.length; i++) {
       var puzzlesMap = puzzlesMaps[i];
+
       // if (_puzzlesList.length < length) {
-      _puzzles.puzzlesList.add(Puzzles(
+      puzzles.puzzlesList.add(Puzzles(
           levelNumber: puzzlesMap['levelNumber'],
           pgn: puzzlesMap['pgn'],
           solution: puzzlesMap['solution']));
       // }
     }
 
-    levelCount = _puzzles.puzzlesList.length;
+    levelCount = puzzles.puzzlesList.length;
     read = true;
 
     // print(_puzzlesList);
@@ -32,10 +33,10 @@ class PuzzlesProvider with ChangeNotifier {
   }
 
   Puzzles getPuzzle(int index) {
-    return _puzzles.puzzlesList[index];
+    return puzzles.puzzlesList[index];
   }
 
   List<Puzzles> get getPuzzles {
-    return _puzzles.puzzlesList;
+    return puzzles.puzzlesList;
   }
 }

@@ -22,7 +22,7 @@ class Register extends StatelessWidget {
                         Text(
                           "Sign up",
                           style: TextStyle(
-                            fontSize: 30,
+                            fontSize: MediaQuery.of(context).size.height / 30,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

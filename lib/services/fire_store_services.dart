@@ -11,8 +11,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FireStoreServices {
-  CollectionReference levelsCollection =
-      FirebaseFirestore.instance.collection('Levels');
+  Query levelsCollection =
+      FirebaseFirestore.instance.collection('Levels').orderBy('levelNumber');
+
   CollectionReference usersCollection =
       FirebaseFirestore.instance.collection('users');
   CollectionReference openingsCollection =
@@ -45,11 +46,17 @@ class FireStoreServices {
     return documentSnapshot;
   }
 
+  Future<DocumentSnapshot> readAllUsers() async {
+    DocumentSnapshot documentSnapshot = await usersCollection.doc().get();
+    return documentSnapshot;
+  }
+
   Future<List> getOpenings() async {
     QuerySnapshot querySnapshot = await openingsCollection.get();
 
     // Get data from docs and convert map to List
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
+
     return allData;
   }
 
@@ -59,7 +66,7 @@ class FireStoreServices {
         .update({'currentLevel': level});
   }
 
-  updateuScore(double score) {
+  updateuScore(int score) {
     usersCollection
         .doc(FirebaseAuth.instance.currentUser?.uid)
         .update({'total_score': score});
@@ -71,9 +78,39 @@ class FireStoreServices {
         .update({'completedLevels': levels});
   }
 
+  updatefavouriteLevels(List levels) {
+    usersCollection
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .update({'fav_puzzles': levels});
+  }
+
   getScores() async {
     QuerySnapshot querySnapshot = await scoreReference.get();
     final allData = querySnapshot.docs.map((doc) => doc.data()).toList();
     return allData;
+  }
+
+  Future getPosts() async {
+    var collection = FirebaseFirestore.instance.collection('users');
+    var querySnapshots = await collection.get();
+
+    return querySnapshots.docs.toList();
+  }
+
+  deleteUser(docID) {
+    FirebaseFirestore.instance.collection('users').doc(docID).delete();
+  }
+
+  deletePuzzle(puzzleID) {
+    FirebaseFirestore.instance.collection('Levels').doc(puzzleID).delete();
+  }
+
+  addPuzzle(int levelNumber, String pgn, String solution) async {
+    var map = {'levelNumber': levelNumber, 'pgn': pgn, 'solution': solution};
+
+    await FirebaseFirestore.instance
+        .collection("Levels")
+        .doc(levelNumber.toString())
+        .set(map);
   }
 }

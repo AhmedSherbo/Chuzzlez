@@ -10,21 +10,12 @@ class OpeningsForm extends StatefulWidget {
   }
 }
 
-// Define a corresponding State class.
-// This class holds data related to the form.
 class MyOpeningsFormState extends State<OpeningsForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a `GlobalKey<FormState>`,
-  // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
   TextEditingController stringController = new TextEditingController();
   String? errorMessage;
   @override
   Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
-
     return Scaffold(
         body: Form(
       key: _formKey,
@@ -53,12 +44,6 @@ class MyOpeningsFormState extends State<OpeningsForm> {
               color: Colors.black,
             ),
           ),
-          /*Padding(padding: EdgeInsets.all(8.0)),
-          SizedBox(
-            width: 20,
-            height: 50,
-          ),*/
-          // Add TextFormFields and ElevatedButton here.
           TextFormField(
             decoration: InputDecoration(
               contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -70,7 +55,6 @@ class MyOpeningsFormState extends State<OpeningsForm> {
               hintText: "Name",
             ),
           ),
-
           TextFormField(
             decoration: InputDecoration(
               contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -95,11 +79,7 @@ class MyOpeningsFormState extends State<OpeningsForm> {
           ),
           ElevatedButton(
               onPressed: () {
-                // Validate returns true if the form is valid, or false otherwise.
-
                 if (_formKey.currentState!.validate()) {
-                  // If the form is valid, display a snackbar. In the real world,
-                  // you'd often call a server or save the information in a database.
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Processing Data')),
                   );
@@ -110,21 +90,6 @@ class MyOpeningsFormState extends State<OpeningsForm> {
                 backgroundColor:
                     MaterialStateProperty.all<Color>(Colors.green.shade900),
               )),
-          /* ElevatedButton(
-              onPressed: () {
-                String a = stringController.text.trim();
-
-                if (a.isEmpty) {
-                  //Put some code here for if string a is empty.
-                  setState(() {
-                    errorMessage = "Your error message";
-                  });
-                }
-              },
-              child: const Text('Submit'),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-              )),*/
         ],
       ),
     ));

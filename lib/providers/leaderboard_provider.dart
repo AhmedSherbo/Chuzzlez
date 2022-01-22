@@ -8,16 +8,15 @@ class LeaderboardProvider with ChangeNotifier {
   Leaderboard leadInstance = Leaderboard();
 
   readScoreBoard() async {
+    leadInstance.scoreboard = <Map>[];
     var ScoreMaps = await instance.getScores();
     leadInstance.length = ScoreMaps.length;
 
     for (var i = 0; i < leadInstance.length; i++) {
-      if (leadInstance.scoreboard.length < leadInstance.length) {
-        var ScoreMap = ScoreMaps[i];
+      var ScoreMap = ScoreMaps[i];
 
-        leadInstance.scoreboard.add(
-            {'Name': ScoreMap['firstname'], 'Score': ScoreMap['total_score']});
-      }
+      leadInstance.scoreboard.add(
+          {'Name': ScoreMap['firstname'], 'Score': ScoreMap['total_score']});
     }
     print(leadInstance.scoreboard);
   }

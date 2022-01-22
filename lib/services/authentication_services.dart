@@ -41,10 +41,7 @@ class AuthenticationService {
     }
   }
 
-  // Future<void> signOut() async {
-  //   await _firebaseAuth.signOut();
-  //   print(
-  //       "sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
-  //   print("AUTH2" + _firebaseAuth.currentUser.toString());
-  // }
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
+  }
 }

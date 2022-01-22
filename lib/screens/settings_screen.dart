@@ -12,7 +12,6 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final _auth = FirebaseAuth.instance;
     var outputButton;
     if (FirebaseAuth.instance.currentUser != null) {
       outputButton = OutlinedButton(
@@ -28,7 +27,7 @@ class SettingsScreen extends StatelessWidget {
         },
         child: Text('Log Out',
             style: TextStyle(
-              fontSize: 20,
+              fontSize: MediaQuery.of(context).size.height / 25,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             )),
@@ -44,7 +43,7 @@ class SettingsScreen extends StatelessWidget {
         },
         child: Text('Log In',
             style: TextStyle(
-              fontSize: 20,
+              fontSize: MediaQuery.of(context).size.height / 25,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             )),
@@ -70,71 +69,67 @@ class SettingsScreen extends StatelessWidget {
         ),
       ),
       SizedBox(
-        height: 24,
+        height: MediaQuery.of(context).size.height / 35,
       ),
       Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            height: 20,
+            height: MediaQuery.of(context).size.height / 30,
           ),
           new Container(
             decoration: BoxDecoration(color: Colors.teal.shade400),
-            width: 360,
+            width: MediaQuery.of(context).size.width,
             child: Text('Settings',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 56,
+                  fontSize: MediaQuery.of(context).size.width / 7,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 )),
           ),
-          SizedBox(height: 120),
+          SizedBox(height: MediaQuery.of(context).size.height / 7),
         ],
       ),
       Row(mainAxisAlignment: MainAxisAlignment.start, children: [
         Text('Theme',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 24,
+              fontSize: MediaQuery.of(context).size.height / 23,
             )),
-        SizedBox(width: 170),
+        SizedBox(width: MediaQuery.of(context).size.width / 2.3),
         SizedBox(
-          width: 20,
-          height: 20,
+          width: MediaQuery.of(context).size.width / 15,
+          height: MediaQuery.of(context).size.height / 30,
           child:
               const DecoratedBox(decoration: BoxDecoration(color: Colors.red)),
         ),
-        SizedBox(width: 20),
+        SizedBox(width: MediaQuery.of(context).size.width / 15),
         SizedBox(
-          width: 20,
-          height: 20,
+          width: MediaQuery.of(context).size.width / 15,
+          height: MediaQuery.of(context).size.height / 30,
           child: DecoratedBox(
               decoration: BoxDecoration(
                   color: Colors.blue,
                   border: Border.all(color: Colors.black, width: 3))),
         ),
-        SizedBox(width: 20),
+        SizedBox(width: MediaQuery.of(context).size.width / 15),
         SizedBox(
-          width: 20,
-          height: 20,
+          width: MediaQuery.of(context).size.width / 15,
+          height: MediaQuery.of(context).size.height / 30,
           child: const DecoratedBox(
               decoration: BoxDecoration(color: Colors.yellow)),
         )
-        // Text('Default',
-        //     style: TextStyle(
-        //       fontSize: 24,
-        //     )),
       ]),
-      SizedBox(height: 50),
+      SizedBox(height: MediaQuery.of(context).size.height / 10),
       Row(mainAxisAlignment: MainAxisAlignment.start, children: [
         Text('Auto-load Puzzlez',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 24,
             )),
-        SizedBox(width: 90),
+        SizedBox(width: MediaQuery.of(context).size.width / 4),
         Switch(
           onChanged: null,
           value: false,
@@ -151,7 +146,7 @@ class SettingsScreen extends StatelessWidget {
               fontWeight: FontWeight.bold,
               fontSize: 24,
             )),
-        SizedBox(width: 200),
+        SizedBox(width: MediaQuery.of(context).size.width / 1.8),
         IconButton(
             onPressed: null,
             icon: Icon(
@@ -159,7 +154,7 @@ class SettingsScreen extends StatelessWidget {
               size: 40,
             ))
       ]),
-      SizedBox(height: 50),
+      SizedBox(height: MediaQuery.of(context).size.height / 15),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [outputButton],

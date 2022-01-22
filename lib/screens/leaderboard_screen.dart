@@ -6,6 +6,7 @@ import '../models/user.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chuzzlez/providers/user_provider.dart';
+import 'package:chuzzlez/providers/leaderboard_provider.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   @override
@@ -15,6 +16,9 @@ class LeaderboardScreen extends StatefulWidget {
 class Leaderboard extends State<LeaderboardScreen> {
   @override
   Widget build(BuildContext context) {
+    var map = Provider.of<LeaderboardProvider>(context, listen: false)
+        .leadInstance
+        .scoreboard;
     return MaterialApp(
       home: Scaffold(
           backgroundColor: Colors.teal.shade400,
@@ -41,137 +45,39 @@ class Leaderboard extends State<LeaderboardScreen> {
                         style: TextStyle(
                             fontSize: 25, fontWeight: FontWeight.bold))),
                 DataColumn(
-                    label: Text('Levels',
+                    label: Text('Score',
                         style: TextStyle(
                             fontSize: 25, fontWeight: FontWeight.bold))),
               ],
               rows: [
-                DataRow(cells: [
-                  DataCell(Row(children: [
-                    Text('1',
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.yellow,
-                            fontWeight: FontWeight.bold)),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        "https://i.pinimg.com/736x/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg",
+                for (int i = 0; i < map.length; i++)
+                  DataRow(cells: [
+                    DataCell(Row(children: [
+                      Text((i + 1).toString(),
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.yellow,
+                              fontWeight: FontWeight.bold)),
+                      SizedBox(
+                        width: 10,
                       ),
-                      radius: 30.0,
-                      child: const Text(
-                        'First',
-                        textAlign: TextAlign.end,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.black),
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          "https://i.pinimg.com/736x/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg",
+                        ),
+                        radius: 30.0,
                       ),
+                    ])),
+                    DataCell(
+                      Text(map[i]['Name'],
+                          style: TextStyle(fontSize: 18, color: Colors.yellow)),
                     ),
-                  ])),
-                  DataCell(
-                    Text('Stephen',
-                        style: TextStyle(fontSize: 18, color: Colors.yellow)),
-                  ),
-                  DataCell(Row(children: [
-                    Text('10',
-                        style: TextStyle(fontSize: 18, color: Colors.yellow)),
-                    Icon(Icons.done)
-                  ])),
-                ]),
-                DataRow(cells: [
-                  DataCell(Row(children: [
-                    Text('2',
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold)),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        "https://i.pinimg.com/736x/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg",
-                      ),
-                      radius: 30.0,
-                    ),
-                  ])),
-                  DataCell(Text('John',
-                      style: TextStyle(fontSize: 18, color: Colors.grey))),
-                  DataCell(Row(children: [
-                    Text('10',
-                        style: TextStyle(fontSize: 18, color: Colors.grey)),
-                    Icon(Icons.done)
-                  ])),
-                ]),
-                DataRow(cells: [
-                  DataCell(Row(children: [
-                    Text('3',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.brown,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        "https://i.pinimg.com/736x/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg",
-                      ),
-                      radius: 30.0,
-                    ),
-                  ])),
-                  DataCell(Text('Harry',
-                      style: TextStyle(fontSize: 18, color: Colors.brown))),
-                  DataCell(Row(children: [
-                    Text('10',
-                        style: TextStyle(fontSize: 18, color: Colors.brown)),
-                    Icon(Icons.done)
-                  ])),
-                ]),
-                DataRow(cells: [
-                  DataCell(Row(children: [
-                    Text('4',
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold)),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        "https://i.pinimg.com/736x/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg",
-                      ),
-                      radius: 30.0,
-                      backgroundColor: Colors.yellow,
-                    ),
-                  ])),
-                  DataCell(Text('Peter',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ))),
-                  DataCell(Row(children: [
-                    Text('10',
-                        style: TextStyle(fontSize: 18, color: Colors.black)),
-                    Icon(Icons.done)
-                  ])),
-                ]),
-                DataRow(cells: [
-                  DataCell(Text('50',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ))),
-                  DataCell(Text('Spencer',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ))),
-                  DataCell(Text('3',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ))),
-                ]),
+                    DataCell(Row(children: [
+                      Text(map[i]['Score'].ceil().toString(),
+                          style: TextStyle(fontSize: 18, color: Colors.yellow)),
+                      Icon(Icons.done)
+                    ])),
+                  ]),
               ],
             ),
           ])),

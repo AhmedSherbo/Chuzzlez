@@ -1,6 +1,9 @@
+import 'package:chuzzlez/models/puzzles.dart';
+import 'package:chuzzlez/providers/puzzles_provider.dart';
+import 'package:chuzzlez/services/fire_store_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-// Define a custom Form widget.
 class AddPuzzle extends StatefulWidget {
   const AddPuzzle({Key? key}) : super(key: key);
 
@@ -10,21 +13,14 @@ class AddPuzzle extends StatefulWidget {
   }
 }
 
-// Define a corresponding State class.
-// This class holds data related to the form.
 class MyAddPuzzleState extends State<AddPuzzle> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a `GlobalKey<FormState>`,
-  // not a GlobalKey<MyCustomFormState>.
+  late FireStoreServices instance = FireStoreServices();
   final _formKey = GlobalKey<FormState>();
-  TextEditingController stringController = new TextEditingController();
+  TextEditingController pgnController = new TextEditingController();
+  TextEditingController solutionController = new TextEditingController();
   String? errorMessage;
   @override
   Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
-
     return Scaffold(
         body: Form(
       key: _formKey,
@@ -53,13 +49,8 @@ class MyAddPuzzleState extends State<AddPuzzle> {
               color: Colors.black,
             ),
           ),
-          /*Padding(padding: EdgeInsets.all(8.0)),
-          SizedBox(
-            width: 20,
-            height: 50,
-          ),*/
-          // Add TextFormFields and ElevatedButton here.
           TextFormField(
+            controller: pgnController,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
               fillColor: Colors.white,
@@ -71,7 +62,7 @@ class MyAddPuzzleState extends State<AddPuzzle> {
             ),
           ),
           TextFormField(
-            controller: stringController,
+            controller: solutionController,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
               focusedBorder: OutlineInputBorder(
@@ -83,14 +74,24 @@ class MyAddPuzzleState extends State<AddPuzzle> {
           ),
           ElevatedButton(
               onPressed: () {
-                // Validate returns true if the form is valid, or false otherwise.
-
-                if (_formKey.currentState!.validate()) {
-                  // If the form is valid, display a snackbar. In the real world,
-                  // you'd often call a server or save the information in a database.
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
-                  );
+                if (pgnController.text != "" ||
+                    solutionController.text.trim() != "") {
+                  var length =
+                      Provider.of<PuzzlesProvider>(context, listen: false)
+                          .getPuzzles
+                          .length;
+                  instance.addPuzzle(length + 1, pgnController.text.trim(),
+                      solutionController.text.trim());
+                  Provider.of<PuzzlesProvider>(context, listen: false)
+                      .puzzles
+                      .puzzlesList
+                      .add(Puzzles(
+                          levelNumber: length + 1,
+                          pgn: pgnController.text.trim(),
+                          solution: solutionController.text.trim()));
+                  Navigator.pop(context);
+                } else {
+                  // ERORR MESSAGE
                 }
               },
               child: const Text('Submit'),
@@ -98,21 +99,6 @@ class MyAddPuzzleState extends State<AddPuzzle> {
                 backgroundColor:
                     MaterialStateProperty.all<Color>(Colors.green.shade900),
               )),
-          /* ElevatedButton(
-              onPressed: () {
-                String a = stringController.text.trim();
-
-                if (a.isEmpty) {
-                  //Put some code here for if string a is empty.
-                  setState(() {
-                    errorMessage = "Your error message";
-                  });
-                }
-              },
-              child: const Text('Submit'),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-              )),*/
         ],
       ),
     ));

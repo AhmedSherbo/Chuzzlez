@@ -7,6 +7,7 @@ class OpeningProvider with ChangeNotifier {
   late FireStoreServices instance = FireStoreServices();
   late int levelCount;
   late int length;
+  late String description;
   bool read = false;
 
   readMap() async {
@@ -16,8 +17,10 @@ class OpeningProvider with ChangeNotifier {
       var openingsMap = openingsMaps[i];
       if (_openingsList.length < length) {
         _openingsList.add(Openings(
-            openingName: openingsMap['openingName'],
-            solution: openingsMap['solution']));
+          description: openingsMap['description'],
+          openingName: openingsMap['openingName'],
+          solution: openingsMap['solution'],
+        ));
       }
     }
     levelCount = _openingsList.length;

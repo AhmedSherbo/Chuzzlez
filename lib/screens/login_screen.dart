@@ -1,11 +1,14 @@
 // ignore_for_file: prefer_const_constructors, unused_field, unused_local_variable, unnecessary_new, avoid_print, use_key_in_widget_constructors
 
+import 'package:chuzzlez/providers/user_provider.dart';
 import 'package:chuzzlez/screens/home_screen.dart';
+import 'package:chuzzlez/services/storage_services.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -41,7 +44,9 @@ class _LoginState extends State<LoginScreen> {
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
           prefixIcon: Icon(Icons.mail),
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width / 50,
+              vertical: MediaQuery.of(context).size.height / 50),
           hintText: "Email",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
     );
@@ -67,7 +72,9 @@ class _LoginState extends State<LoginScreen> {
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
             prefixIcon: Icon(Icons.vpn_key),
-            contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+            contentPadding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width / 50,
+                vertical: MediaQuery.of(context).size.height / 50),
             hintText: "Password",
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(10))));
@@ -76,7 +83,9 @@ class _LoginState extends State<LoginScreen> {
       borderRadius: BorderRadius.circular(30),
       color: Colors.teal.shade700,
       child: MaterialButton(
-        padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+        padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width / 40,
+            vertical: MediaQuery.of(context).size.height / 40),
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () {
           signIn(emailController.text, passwordController.text);
@@ -85,7 +94,9 @@ class _LoginState extends State<LoginScreen> {
           "Login",
           textAlign: TextAlign.center,
           style: TextStyle(
-              fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+              fontSize: MediaQuery.of(context).size.width / 15,
+              color: Colors.black,
+              fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -103,27 +114,29 @@ class _LoginState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: 100),
+                    SizedBox(height: MediaQuery.of(context).size.height / 10),
                     emailField,
-                    SizedBox(height: 25),
+                    SizedBox(height: MediaQuery.of(context).size.height / 25),
                     passwordfield,
-                    SizedBox(height: 25),
+                    SizedBox(height: MediaQuery.of(context).size.height / 25),
                     loginButton,
-                    SizedBox(height: 15),
+                    SizedBox(height: MediaQuery.of(context).size.height / 25),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text("Don't have an account?"),
                         GestureDetector(
                             onTap: () {
-                              Navigator.pushNamed(context, '/register');
+                              Navigator.pushNamed(context, '/register',
+                                  arguments: {'role': false});
                             },
                             child: Text(
                               "Sign up",
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 15),
+                                  fontSize:
+                                      MediaQuery.of(context).size.height / 35),
                             ))
                       ],
                     )
@@ -147,6 +160,10 @@ class _LoginState extends State<LoginScreen> {
                   Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => HomeScreen())),
                 });
+        await Provider.of<UserProvider>(context, listen: false).readUser();
+        Provider.of<UserProvider>(context, listen: false).getUser.avatarUrl =
+            await StorageRepo().getUserProfileImage(
+                Provider.of<UserProvider>(context, listen: false).getUser.uid);
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
           case "invalid-email":

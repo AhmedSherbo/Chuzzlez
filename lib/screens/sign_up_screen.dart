@@ -24,14 +24,19 @@ class _RegisterationState extends State<RegisterScreen> {
   final TextEditingController confirmPasswordEditingController =
       TextEditingController();
   final _auth = FirebaseAuth.instance;
+  late var role;
   late String errorMessage;
   @override
   Widget build(BuildContext context) {
+    ModalRoute.of(context)?.settings.arguments;
+    Map<String, Object> args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, Object>;
+    role = args['role'];
+
     final firstNameField = TextFormField(
       autofocus: false,
       controller: firstNameEditingController,
       keyboardType: TextInputType.name,
-      // ignore: missing_return
       validator: (value) {
         RegExp regExp = RegExp(r'^.{3,}$');
         if (value!.isEmpty) {
@@ -49,7 +54,9 @@ class _RegisterationState extends State<RegisterScreen> {
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
           prefixIcon: Icon(Icons.account_circle),
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width / 50,
+              vertical: MediaQuery.of(context).size.height / 50),
           hintText: "First Name",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
     );
@@ -76,7 +83,9 @@ class _RegisterationState extends State<RegisterScreen> {
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
           prefixIcon: Icon(Icons.account_circle),
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width / 50,
+              vertical: MediaQuery.of(context).size.height / 50),
           hintText: "Second Name",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
     );
@@ -100,7 +109,9 @@ class _RegisterationState extends State<RegisterScreen> {
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
           prefixIcon: Icon(Icons.email),
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width / 50,
+              vertical: MediaQuery.of(context).size.height / 50),
           hintText: "Email",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
     );
@@ -109,7 +120,6 @@ class _RegisterationState extends State<RegisterScreen> {
       autofocus: false,
       controller: passwordEditingController,
       obscureText: true,
-      // ignore: missing_return
       validator: (value) {
         RegExp regExp = RegExp(r'^.{6,}$');
         if (value!.isEmpty) {
@@ -126,7 +136,9 @@ class _RegisterationState extends State<RegisterScreen> {
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
           prefixIcon: Icon(Icons.vpn_key),
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width / 50,
+              vertical: MediaQuery.of(context).size.height / 50),
           hintText: "Password",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
     );
@@ -135,7 +147,6 @@ class _RegisterationState extends State<RegisterScreen> {
       autofocus: false,
       controller: confirmPasswordEditingController,
       obscureText: true,
-      // ignore: missing_return
       validator: (value) {
         if (confirmPasswordEditingController.text !=
             passwordEditingController.text) {
@@ -149,7 +160,9 @@ class _RegisterationState extends State<RegisterScreen> {
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
           prefixIcon: Icon(Icons.vpn_key),
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width / 50,
+              vertical: MediaQuery.of(context).size.height / 50),
           hintText: "Confirm Password",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
     );
@@ -158,7 +171,9 @@ class _RegisterationState extends State<RegisterScreen> {
       borderRadius: BorderRadius.circular(30),
       color: Colors.teal.shade700,
       child: MaterialButton(
-        padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+        padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width / 50,
+            vertical: MediaQuery.of(context).size.height / 50),
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () {
           signUp(emailEditingController.text, passwordEditingController.text);
@@ -167,7 +182,9 @@ class _RegisterationState extends State<RegisterScreen> {
           "Signup",
           textAlign: TextAlign.center,
           style: TextStyle(
-              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+              fontSize: MediaQuery.of(context).size.width / 15,
+              color: Colors.white,
+              fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -176,7 +193,10 @@ class _RegisterationState extends State<RegisterScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -188,7 +208,9 @@ class _RegisterationState extends State<RegisterScreen> {
           child: Container(
             color: Colors.teal.shade400,
             child: Padding(
-              padding: const EdgeInsets.all(35.0),
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width / 25,
+                  vertical: MediaQuery.of(context).size.height / 150),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -198,33 +220,31 @@ class _RegisterationState extends State<RegisterScreen> {
                     Text(
                       "Sign up",
                       style: TextStyle(
-                        fontSize: 30,
+                        fontSize: MediaQuery.of(context).size.height / 15,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
                       "Create an account to start playing! ",
                       style: TextStyle(
-                        fontSize: 15,
+                        fontSize: MediaQuery.of(context).size.height / 35,
                         color: Colors.black,
                       ),
                     ),
                     Icon(Icons.games_sharp),
-                    SizedBox(height: 30),
+                    SizedBox(height: MediaQuery.of(context).size.height / 20),
                     firstNameField,
-                    SizedBox(height: 24),
+                    SizedBox(height: MediaQuery.of(context).size.height / 30),
                     SecondNameField,
-                    SizedBox(height: 24),
+                    SizedBox(height: MediaQuery.of(context).size.height / 30),
                     emailField,
-                    SizedBox(height: 24),
+                    SizedBox(height: MediaQuery.of(context).size.height / 30),
                     passwordField,
-                    SizedBox(height: 24),
+                    SizedBox(height: MediaQuery.of(context).size.height / 30),
                     confirmPasswordField,
-                    SizedBox(height: 24),
+                    SizedBox(height: MediaQuery.of(context).size.height / 30),
                     signupButton,
-                    SizedBox(
-                      height: 24,
-                    )
+                    SizedBox(height: MediaQuery.of(context).size.height / 30),
                   ],
                 ),
               ),
@@ -274,21 +294,16 @@ class _RegisterationState extends State<RegisterScreen> {
   }
 
   postDetailsToFirestore() async {
-    // calling our firestore
-    // calling our user model
-    // sedning these values
-
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
 
     Users userModel = Users();
 
-    // writing all the values
     userModel.email = user!.email;
     userModel.uid = user.uid;
     userModel.firstName = firstNameEditingController.text;
     userModel.lastName = secondNameEditingController.text;
-
+    userModel.isAdmin = role;
     await firebaseFirestore
         .collection("users")
         .doc(user.uid)

@@ -30,7 +30,7 @@ class _LearningState extends State<LearningScreen> {
     return Scaffold(
         body: Column(children: [
       SizedBox(
-        height: 35,
+        height: MediaQuery.of(context).size.height / 14,
       ),
       Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +38,7 @@ class _LearningState extends State<LearningScreen> {
         children: [
           Text('Openings',
               style: TextStyle(
-                fontSize: 30,
+                fontSize: MediaQuery.of(context).size.width / 12,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               )),
@@ -48,7 +48,9 @@ class _LearningState extends State<LearningScreen> {
         Align(
           alignment: Alignment.topLeft,
           child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width / 40,
+              ),
               child: OutlinedButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -69,23 +71,28 @@ class _LearningState extends State<LearningScreen> {
         crossAxisCount: 2,
         childAspectRatio: 10 / 4,
         crossAxisSpacing: 0,
-        mainAxisSpacing: 1.0,
+        mainAxisSpacing: 0,
         children: [
           for (int i = 0; i < number; i++)
             ListView(
               children: <Widget>[
                 Container(
                     child: ListTile(
+                  horizontalTitleGap: 1,
                   title: Text(list[i].openingName),
                   dense: true,
-                  leading:
-                      Image(image: AssetImage('images/chess_piece_pawn.png')),
+                  leading: Image(
+                    image: AssetImage('images/chess_piece_pawn.png'),
+                    width: MediaQuery.of(context).size.width / 5,
+                    height: MediaQuery.of(context).size.height / 5,
+                  ),
                   tileColor: Colors.blueGrey,
-                  onTap: () => Navigator.pushNamed(context, '/board',
-                      arguments: {
-                        'query': 'opening',
-                        'name': list[i].openingName
-                      }),
+                  onTap: () =>
+                      Navigator.pushNamed(context, '/board', arguments: {
+                    'query': 'opening',
+                    'name': list[i].openingName,
+                    'description': list[i].description
+                  }),
                 )),
               ],
             )
@@ -153,11 +160,6 @@ class _LearningState extends State<LearningScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // if (query == "concepts") {
-    //   return concepts();
-    // } else if (query == "openings") {
-    //   return openings();
-    // }
     Widget concept = concepts();
     Widget opening = openings();
     if (query['query'] == "concepts") {

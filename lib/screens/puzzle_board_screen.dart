@@ -1,3 +1,4 @@
+import 'package:chuzzlez/providers/leaderboard_provider.dart';
 import 'package:chuzzlez/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:chuzzlez/models/puzzles.dart';
@@ -24,13 +25,14 @@ class _BoardState extends State<PuzzleBoardScreen> {
   late FireStoreServices instance = FireStoreServices();
   late double score = 0;
   late double factor = 1;
-  late double total_score = 0;
+  late int total_score = 0;
+
   void alertWin() {
     AlertDialog alert = AlertDialog(
         content: Column(mainAxisSize: MainAxisSize.min, children: [
           Text('You Won!',
               style: TextStyle(
-                fontSize: 30,
+                fontSize: MediaQuery.of(context).size.height / 20,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               )),
@@ -78,8 +80,6 @@ class _BoardState extends State<PuzzleBoardScreen> {
       print(e);
     }
   }
-
-  void loadOpening() {}
 
   @override
   void initState() {
@@ -138,7 +138,15 @@ class _BoardState extends State<PuzzleBoardScreen> {
                       .getUser
                       .total_score +
                   score.ceil();
-              print(total_score);
+              Provider.of<UserProvider>(context, listen: false)
+                  .getUser
+                  .total_score = total_score;
+
+              print('total score = ' +
+                  Provider.of<UserProvider>(context, listen: false)
+                      .getUser
+                      .total_score
+                      .toString());
 
               try {
                 instance.updateCompletedLevels(
@@ -158,8 +166,6 @@ class _BoardState extends State<PuzzleBoardScreen> {
         factor += 0.1;
         print(factor);
       }
-    } else {
-      // print('else');
     }
   }
 
@@ -167,18 +173,11 @@ class _BoardState extends State<PuzzleBoardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(children: [
-        SizedBox(height: 7),
+        SizedBox(height: MediaQuery.of(context).size.height / 40),
         Center(
             child: Text(' Level ${levelNumber + 1}',
                 style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ))),
-        Center(
-            child: Text('Score',
-                style: TextStyle(
-                  fontSize: 20,
+                  fontSize: MediaQuery.of(context).size.height / 30,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ))),
@@ -199,31 +198,82 @@ class _BoardState extends State<PuzzleBoardScreen> {
                 side: BorderSide(color: Colors.black),
               ),
             ),
-            Text("   " + score.ceil().toString(),
+            Text("Score :  " + score.ceil().toString(),
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: MediaQuery.of(context).size.height / 30,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 )),
+            if (Provider.of<UserProvider>(context, listen: false)
+                .getUser
+                .fav_puzzles
+                .contains(levelNumber + 1)) ...[
+              IconButton(
+                icon: Icon(Icons.star),
+                iconSize: 24.0,
+                color: Colors.yellowAccent,
+                onPressed: () {
+                  setState(() {
+                    Provider.of<UserProvider>(context, listen: false)
+                        .getUser
+                        .fav_puzzles
+                        .remove(levelNumber + 1);
+                  });
+
+                  try {
+                    instance.updatefavouriteLevels(
+                        Provider.of<UserProvider>(context, listen: false)
+                            .getUser
+                            .fav_puzzles);
+                  } catch (e) {
+                    print(e);
+                  }
+                },
+              )
+            ] else ...[
+              IconButton(
+                icon: Icon(Icons.star),
+                iconSize: 24.0,
+                color: Colors.white,
+                onPressed: () {
+                  setState(() {
+                    if (!Provider.of<UserProvider>(context, listen: false)
+                        .getUser
+                        .fav_puzzles
+                        .contains(levelNumber + 1)) {
+                      Provider.of<UserProvider>(context, listen: false)
+                          .getUser
+                          .fav_puzzles
+                          .add(levelNumber + 1);
+                    }
+                    print(Provider.of<UserProvider>(context, listen: false)
+                        .getUser
+                        .fav_puzzles);
+                    try {
+                      instance.updatefavouriteLevels(
+                          Provider.of<UserProvider>(context, listen: false)
+                              .getUser
+                              .fav_puzzles);
+                    } catch (e) {
+                      print(e);
+                    }
+                  });
+                },
+              )
+            ],
             OutlinedButton(
               onPressed: () {
                 var count = Provider.of<PuzzlesProvider>(context, listen: false)
                     .getPuzzles
                     .length;
-
-                if (levelNumber != count - 1) {
-                  Provider.of<UserProvider>(context, listen: false)
-                      .getUser
-                      .currentLevel += 1;
-                  setState(() {
-                    won = false;
-                  });
-                  loadPuzzle();
+                if (levelNumber <= count - 1) {
+                  Provider.of<UserProvider>(context, listen: false).nextLevel();
+                  Navigator.pushReplacementNamed(context, '/puzzle');
                 }
               },
-              child: const Text('Next',
+              child: Text('Next',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: MediaQuery.of(context).size.height / 30,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   )),
@@ -231,7 +281,7 @@ class _BoardState extends State<PuzzleBoardScreen> {
                 shape: StadiumBorder(),
                 side: BorderSide(color: Colors.black),
               ),
-            )
+            ),
           ],
         ),
         ChessBoard(
